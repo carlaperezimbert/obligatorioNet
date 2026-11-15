@@ -8,10 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Obligatorio</RootNamespace>
     <AssemblyName>Obligatorio</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,12 +51,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CapaDominio\CapaDominio.csproj">
-      <Project>{b633dee1-2a8e-43ba-948a-8ff74717fcc8}</Project>
+    <ProjectReference Include="CapaDominio\CapaDominio.csproj">
+      <Project>{62492666-098e-cf03-3fd4-ef931854ff77}</Project>
       <Name>CapaDominio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CapaLogica\CapaLogica.csproj">
-      <Project>{bc52e682-a27c-450d-9bf4-8e7025f6b1d6}</Project>
+    <ProjectReference Include="CapaLogica\CapaLogica.csproj">
+      <Project>{bb0a1dcc-dc24-46e0-c9e4-3d925416f068}</Project>
       <Name>CapaLogica</Name>
     </ProjectReference>
   </ItemGroup>
