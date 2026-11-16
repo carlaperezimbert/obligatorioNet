@@ -6,7 +6,7 @@ using CapaDatos;
 
 namespace CapaLogica
 {
-    public class ServicioFacturacion
+    public class ServicioFacturacion : IServicioFacturacion
     {
         private readonly RepositorioFactura _repoFactura = new RepositorioFactura();
         private readonly RepositorioCliente _repoCliente = new RepositorioCliente();

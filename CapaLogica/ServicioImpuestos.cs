@@ -6,7 +6,7 @@ using CapaDatos;
 
 namespace CapaLogica
 {
-    public class ServicioImpuestos
+    public class ServicioImpuestos : IServicioImpuestos
     {
         private readonly RepositorioImpuestos _repoImpuestos = new RepositorioImpuestos();
         private readonly RepositorioFactura _repoFactura = new RepositorioFactura();

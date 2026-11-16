@@ -5,7 +5,7 @@ using CapaDatos;
 
 namespace CapaLogica
 {
-    public class ServicioProyecto
+    public class ServicioProyecto : IServicioProyecto
     {
         private readonly RepositorioProyecto _repoProyecto = new RepositorioProyecto();
         private readonly RepositorioCliente _repoCliente = new RepositorioCliente();

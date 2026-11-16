@@ -6,7 +6,7 @@ using CapaDatos;
 
 namespace CapaLogica
 {
-    public class ServicioCliente
+    public class ServicioCliente : IServicioCliente
     {
         // Instanciamos los repositorios necesarios de CapaDatos (ajustar nombres si difieren en tu CapaDatos)
         private readonly RepositorioCliente _repoCliente = new RepositorioCliente();
