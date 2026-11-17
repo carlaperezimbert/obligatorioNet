@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CapaDatos
 {
-    public class ClienteRepository : IClienteRepository
+    public class RepositorioCliente : IClienteRepository
     {
         public int Agregar(Cliente cliente)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CapaDatos
 {
-    public class ProyectoRepository : IProyectoRepository
+    public class RepositorioProyecto : IProyectoRepository
     {
         public int Agregar(Proyecto proyecto)
         {
@@ -72,8 +72,7 @@ FechaFinPlanificada, FechaFin, Estado)
         {
             using (var conn = Conexion.ObtenerConexion())
             {
-                string sql = "SELECT Id, ClienteId, Nombre, Tipo, FechaInicio, PresupuestoInicial,
-FechaFinPlanificada, FechaFin, Estado FROM Proyectos WHERE Id = @Id";
+                string sql = "SELECT Id, ClienteId, Nombre, Tipo, FechaInicio, PresupuestoInicial, FechaFinPlanificada, FechaFin, Estado FROM Proyectos WHERE Id = @Id";
                 using (var cmd = new SqlCommand(sql, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -90,8 +89,7 @@ FechaFinPlanificada, FechaFin, Estado FROM Proyectos WHERE Id = @Id";
             var lista = new List<Proyecto>();
             using (var conn = Conexion.ObtenerConexion())
             {
-                string sql = "SELECT Id, ClienteId, Nombre, Tipo, FechaInicio, PresupuestoInicial,
-FechaFinPlanificada, FechaFin, Estado FROM Proyectos";
+                string sql = "SELECT Id, ClienteId, Nombre, Tipo, FechaInicio, PresupuestoInicial, FechaFinPlanificada, FechaFin, Estado FROM Proyectos";
                 using (var cmd = new SqlCommand(sql, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
