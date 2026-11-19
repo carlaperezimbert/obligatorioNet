@@ -1,6 +1,7 @@
 ﻿using CapaDominio;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,6 +116,12 @@ FechaFinPlanificada, FechaFin, Estado)
                 FechaFin = reader.IsDBNull(7) ? (DateTime?)null : reader.GetDateTime(7),
                 Estado = (EstadoProyecto)reader.GetInt32(8)
             };
+        }
+
+        //Falta cuerpo de metodo
+        public object ObtenerPorCliente(int idCliente)
+        {
+            throw new NotImplementedException();
         }
     }
 }

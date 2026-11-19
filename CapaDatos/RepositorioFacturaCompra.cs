@@ -1,13 +1,14 @@
 ﻿using CapaDominio;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CapaDatos
 {
-    public class FacturaCompraRepository : IFacturaCompraRepository
+    public class RepositorioFacturaCompra : IFacturaCompraRepository
     {
         /// <summary>
         /// Inserta una nueva factura de compra emitida por un proveedor.

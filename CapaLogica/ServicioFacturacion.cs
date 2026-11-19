@@ -9,6 +9,7 @@ namespace CapaLogica
     public class ServicioFacturacion : IServicioFacturacion
     {
         private readonly RepositorioFactura _repoFactura = new RepositorioFactura();
+        private readonly RepositorioFactura _repoFactura = new RepositorioFactura();
         private readonly RepositorioCliente _repoCliente = new RepositorioCliente();
         private readonly RepositorioProyecto _repoProyecto = new RepositorioProyecto();
 
@@ -19,27 +20,27 @@ namespace CapaLogica
         // 1. FACTURAS DE VENTA (EMITIDAS)
         // ==========================================
 
-        public void RegistrarFacturaVenta(FacturaVenta factura, bool llevaIva)
+        public void RegistrarFacturaVenta(FacturaVenta facturaVenta, bool llevaIva)
         {
-            ValidarDatosFacturaVenta(factura);
+            ValidarDatosFacturaVenta(facturaVenta);
 
             // 1. Verificar que el cliente exista
-            Cliente clienteExistente = _repoCliente.ObtenerPorId(factura.Cliente.Id);
+            Cliente clienteExistente = _repoCliente.ObtenerPorId(facturaVenta.ClienteId);
             if (clienteExistente == null)
             {
                 throw new Exception("El cliente seleccionado para la factura no existe.");
             }
 
             // 2. Si viene un proyecto asociado (es opcional según la letra), validar que exista y sea de ese cliente
-            if (factura.Proyecto != null && factura.Proyecto.Id > 0)
+            if (facturaVenta.ProyectoId != null && facturaVenta.ProyectoId > 0)
             {
-                Proyecto proyectoExistente = _repoProyecto.ObtenerPorId(factura.Proyecto.Id);
+                Proyecto proyectoExistente = _repoProyecto.ObtenerPorId(facturaVenta.ProyectoId);
                 if (proyectoExistente == null)
                 {
                     throw new Exception("El proyecto asociado a la factura no existe.");
                 }
 
-                if (proyectoExistente.Cliente.Id != factura.Cliente.Id)
+                if (proyectoExistente.ClienteId != facturaVenta.ClienteId)
                 {
                     throw new Exception("El proyecto seleccionado no pertenece al cliente de la factura.");
                 }
@@ -51,17 +52,17 @@ namespace CapaLogica
             }
 
             // 3. Cálculos automáticos en la capa lógica (nunca confiar solo en la interfaz)
-            factura.SubTotal = factura.Detalles.Sum(d => d.Monto);
-            factura.IVA = llevaIva ? Math.Round(factura.SubTotal * TASA_IVA, 2) : 0m;
-            factura.MontoTotal = factura.SubTotal + factura.IVA;
+            facturaVenta.Subtotal = facturaVenta.Detalles.Sum(d => d.Monto);
+            facturaVenta.IVA = llevaIva ? Math.Round(facturaVenta.Subtotal * TASA_IVA, 2) : 0m;
+            facturaVenta.Total = facturaVenta.Subtotal + facturaVenta.IVA;
 
             // Si no trae fecha asignada, se registra con la fecha actual
-            if (factura.Fecha == DateTime.MinValue)
+            if (facturaVenta.Fecha == DateTime.MinValue)
             {
-                factura.Fecha = DateTime.Now;
+                facturaVenta.Fecha = DateTime.Now;
             }
 
-            _repoFactura.AgregarVenta(factura);
+            _repoFactura.AgregarVenta(facturaVenta);
         }
 
         public List<FacturaVenta> ListarFacturasVentas()
@@ -79,19 +80,19 @@ namespace CapaLogica
         // 2. FACTURAS DE COMPRA
         // ==========================================
 
-        public void RegistrarFacturaCompra(FacturaCompra factura)
+        public void RegistrarFacturaCompra(FacturaCompra facturaCompra)
         {
-            ValidarDatosFacturaCompra(factura);
+            ValidarDatosFacturaCompra(facturaCompra);
 
             // Aseguramos coherencia en el monto total (SubTotal + IVA)
-            factura.MontoTotal = factura.SubTotal + factura.IVA;
+            facturaCompra.Total = facturaCompra.Subtotal + facturaCompra.IVA;
 
-            if (factura.Fecha == DateTime.MinValue)
+            if (facturaCompra.Fecha == DateTime.MinValue)
             {
-                factura.Fecha = DateTime.Now;
+                facturaCompra.Fecha = DateTime.Now;
             }
 
-            _repoFactura.AgregarCompra(factura);
+            _repoFactura.AgregarCompra(facturaCompra);
         }
 
         public List<FacturaCompra> ListarFacturasCompras()
@@ -109,29 +110,29 @@ namespace CapaLogica
         // 3. VALIDACIONES PRIVADAS
         // ==========================================
 
-        private void ValidarDatosFacturaVenta(FacturaVenta factura)
+        private void ValidarDatosFacturaVenta(FacturaVenta facturaVenta)
         {
-            if (factura == null)
+            if (facturaVenta == null)
             {
                 throw new Exception("Los datos de la factura de venta no pueden ser nulos.");
             }
 
-            if (string.IsNullOrWhiteSpace(factura.NroFactura))
-            {
-                throw new Exception("El número de factura es obligatorio.");
-            }
+            //if (int.IsNull(facturaVenta.NumeroFactura))
+            //{
+            //    throw new Exception("El número de factura es obligatorio.");
+            //}
 
-            if (factura.Cliente == null || factura.Cliente.Id <= 0)
+            if (facturaVenta.ClienteId == null || facturaVenta.ClienteId <= 0)
             {
                 throw new Exception("Debe indicar un cliente válido para emitir la factura.");
             }
 
-            if (factura.Detalles == null || factura.Detalles.Count == 0)
+            if (facturaVenta.Detalles == null || facturaVenta.Detalles.Count == 0)
             {
                 throw new Exception("La factura debe contener al menos un renglón de detalle.");
             }
 
-            foreach (var renglon in factura.Detalles)
+            foreach (var renglon in facturaVenta.Detalles)
             {
                 if (string.IsNullOrWhiteSpace(renglon.Descripcion))
                 {
@@ -145,46 +146,46 @@ namespace CapaLogica
             }
         }
 
-        private void ValidarDatosFacturaCompra(FacturaCompra factura)
+        private void ValidarDatosFacturaCompra(FacturaCompra facturaCompra)
         {
-            if (factura == null)
+            if (facturaCompra == null)
             {
                 throw new Exception("Los datos de la factura de compra no pueden ser nulos.");
             }
 
-            if (string.IsNullOrWhiteSpace(factura.NroFactura))
-            {
-                throw new Exception("El número de factura de compra es obligatorio.");
-            }
+            //if (string.IsNullOrWhiteSpace(facturaCompra.NumeroFactura))
+            //{
+            //    throw new Exception("El número de factura de compra es obligatorio.");
+            //}
 
             // Validación de los datos del proveedor exigidos por la letra
-            if (string.IsNullOrWhiteSpace(factura.ProveedorRazonSocial))
+            if (string.IsNullOrWhiteSpace(facturaCompra.ProveedorRazonSocial))
             {
                 throw new Exception("La Razón Social del proveedor es obligatoria.");
             }
 
-            if (string.IsNullOrWhiteSpace(factura.ProveedorRUT))
+            if (string.IsNullOrWhiteSpace(facturaCompra.ProveedorRUT))
             {
                 throw new Exception("El RUT del proveedor es obligatorio.");
             }
 
-            string rutLimpio = factura.ProveedorRUT.Trim();
+            string rutLimpio = facturaCompra.ProveedorRUT.Trim();
             if (rutLimpio.Length != 12 || !rutLimpio.All(char.IsDigit))
             {
                 throw new Exception("El RUT del proveedor debe contener exactamente 12 dígitos numéricos.");
             }
 
-            if (string.IsNullOrWhiteSpace(factura.ProveedorDireccion))
+            if (string.IsNullOrWhiteSpace(facturaCompra.ProveedorDireccion))
             {
                 throw new Exception("La dirección del proveedor es obligatoria.");
             }
 
-            if (factura.SubTotal <= 0)
+            if (facturaCompra.Subtotal <= 0)
             {
                 throw new Exception("El subtotal de la factura de compra debe ser mayor a cero.");
             }
 
-            if (factura.IVA < 0)
+            if (facturaCompra.IVA < 0)
             {
                 throw new Exception("El IVA de la factura de compra no puede ser negativo.");
             }
@@ -194,4 +195,8 @@ namespace CapaLogica
         {
             if (mes < 1 || mes > 12)
             {
-                throw new Exception("El mes debe estar comprendido entre 1 y 12
+                throw new Exception("El mes debe estar comprendido entre 1 y 12");
+            }
+        }
+    }
+}

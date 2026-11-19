@@ -9,7 +9,7 @@ namespace CapaDominio
         public int NumeroFactura { get; set; }
         public DateTime Fecha { get; set; }
         public int ClienteId { get; set; }
-        public int? ProyectoId { get; set; } 
+        public int ProyectoId { get; set; } 
         public decimal Subtotal { get; set; }
         public decimal IVA { get; set; }
         public decimal Total { get; set; }

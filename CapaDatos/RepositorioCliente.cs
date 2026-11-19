@@ -1,6 +1,7 @@
 ﻿using CapaDominio;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,6 +105,12 @@ namespace CapaDatos
                 }
             }
             return lista;
+        }
+        
+        //Falta cuerpo del metodo
+        public Cliente ObtenerPorRut(string rUT)
+        {
+            throw new NotImplementedException();
         }
     }
 }
