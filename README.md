@@ -10,7 +10,7 @@ Proyecto académico desarrollado en .NET bajo una arquitectura en capas.
 
 ## 🚀 Cómo levantar el proyecto por primera vez
 1. **Clonar el repositorio:** Abrir Visual Studio -> *Clonar repositorio* -> Pegar la URL de este repositorio.
-2. **Base de Datos:** Ejecutar el script SQL de creación de la base de datos (`EmpresaNetDB`) en SQL Server.
+2. **Base de Datos:** Ejecutar el script SQL de creación de la base de datos (`ObligatorioDB`) en SQL Server.
 3. **Cadena de conexión:** Actualizar el nombre del servidor local (`Server=TU_SERVIDOR`) en los repositorios de la `CapaDatos`.
 4. **Compilar y ejecutar:** Abrir `Obligatorio.sln`, asegurarse de que las dependencias entre capas estén activas y ejecutar.
 
