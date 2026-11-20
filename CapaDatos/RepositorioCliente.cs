@@ -1,14 +1,8 @@
 ﻿using CapaDominio;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CapaDatos
 {
-    public class RepositorioCliente : IClienteRepository
+    public class RepositorioCliente
     {
         public int Agregar(Cliente cliente)
         {
@@ -23,11 +17,12 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@RUT", cliente.RUT);
                     cmd.Parameters.AddWithValue("@Direccion", cliente.Direccion);
 
+                    conn.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
-
                 }
             }
         }
+
         public bool Modificar(Cliente cliente)
         {
             using (var conn = Conexion.ObtenerConexion())
@@ -41,10 +36,13 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@RazonSocial", cliente.RazonSocial);
                     cmd.Parameters.AddWithValue("@RUT", cliente.RUT);
                     cmd.Parameters.AddWithValue("@Direccion", cliente.Direccion);
+
+                    conn.Open();
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
+
         public bool Eliminar(int id)
         {
             using (var conn = Conexion.ObtenerConexion())
@@ -53,10 +51,13 @@ namespace CapaDatos
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
+
+                    conn.Open();
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
+
         public Cliente ObtenerPorId(int id)
         {
             using (var conn = Conexion.ObtenerConexion())
@@ -65,23 +66,42 @@ namespace CapaDatos
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
+
+                    conn.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            return new Cliente
-                            {
-                                Id = reader.GetInt32(0),
-                                RazonSocial = reader.GetString(1),
-                                RUT = reader.GetString(2),
-                                Direccion = reader.GetString(3)
-                            };
+                            return MapearCliente(reader);
                         }
                     }
                 }
             }
             return null;
         }
+
+        public Cliente ObtenerPorRut(string rut)
+        {
+            using (var conn = Conexion.ObtenerConexion())
+            {
+                string sql = "SELECT Id, RazonSocial, RUT, Direccion FROM Clientes WHERE RUT = @RUT";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@RUT", rut);
+
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return MapearCliente(reader);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
         public List<Cliente> ObtenerTodos()
         {
             var lista = new List<Cliente>();
@@ -90,27 +110,29 @@ namespace CapaDatos
             {
                 string sql = "SELECT Id, RazonSocial, RUT, Direccion FROM Clientes";
                 using (var cmd = new SqlCommand(sql, conn))
-                using (var reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        lista.Add(new Cliente
+                        while (reader.Read())
                         {
-                            Id = reader.GetInt32(0),
-                            RazonSocial = reader.GetString(1),
-                            RUT = reader.GetString(2),
-                            Direccion = reader.GetString(3)
-                        });
+                            lista.Add(MapearCliente(reader));
+                        }
                     }
                 }
             }
             return lista;
         }
-        
-        //Falta cuerpo del metodo
-        public Cliente ObtenerPorRut(string rUT)
+
+        private static Cliente MapearCliente(SqlDataReader reader)
         {
-            throw new NotImplementedException();
+            return new Cliente
+            {
+                Id = reader.GetInt32(0),
+                RazonSocial = reader.GetString(1),
+                RUT = reader.GetString(2),
+                Direccion = reader.GetString(3)
+            };
         }
     }
 }

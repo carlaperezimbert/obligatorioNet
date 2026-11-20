@@ -6,15 +6,14 @@ namespace CapaDominio
     public class FacturaVenta
     {
         public int Id { get; set; }
-        public int NumeroFactura { get; set; }
+        public string NroFactura { get; set; }
         public DateTime Fecha { get; set; }
-        public int ClienteId { get; set; }
-        public int ProyectoId { get; set; } 
-        public decimal Subtotal { get; set; }
-        public decimal IVA { get; set; }
-        public decimal Total { get; set; }
-
+        public Cliente Cliente { get; set; }
+        public Proyecto? Proyecto { get; set; }
         public List<DetalleFacturaVenta> Detalles { get; set; } = new List<DetalleFacturaVenta>();
+        public decimal SubTotal { get; set; }
+        public decimal IVA { get; set; }
+        public decimal MontoTotal { get; set; }
     }
 
     public class DetalleFacturaVenta
