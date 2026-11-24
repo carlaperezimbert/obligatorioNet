@@ -1,4 +1,6 @@
 ﻿using CapaDominio;
+using System.Data.SqlClient;
+
 
 namespace CapaDatos
 {
@@ -6,20 +8,38 @@ namespace CapaDatos
     {
         public int Agregar(Cliente cliente)
         {
-            using (var conn = Conexion.ObtenerConexion())
+            try
             {
-                string sql = @"INSERT INTO Clientes (RazonSocial, RUT, Direccion)
-                               VALUES (@RazonSocial, @RUT, @Direccion);
-                               SELECT SCOPE_IDENTITY();";
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var conn = Conexion.ObtenerConexion())
                 {
-                    cmd.Parameters.AddWithValue("@RazonSocial", cliente.RazonSocial);
-                    cmd.Parameters.AddWithValue("@RUT", cliente.RUT);
-                    cmd.Parameters.AddWithValue("@Direccion", cliente.Direccion);
+                    string sql = @"INSERT INTO Clientes (RazonSocial, RUT, Direccion)
+                           VALUES (@RazonSocial, @RUT, @Direccion);
+                           SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
-                    conn.Open();
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@RazonSocial", cliente.RazonSocial);
+                        cmd.Parameters.AddWithValue("@RUT", cliente.RUT);
+                        cmd.Parameters.AddWithValue("@Direccion", cliente.Direccion);
+
+                        conn.Open();
+                        object resultado = cmd.ExecuteScalar();
+
+                        return resultado != null && resultado != DBNull.Value
+                            ? Convert.ToInt32(resultado)
+                            : 0;
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"[ERROR SQL] Error {ex.Number} al insertar cliente: {ex.Message}");
+                throw; // O devolvé -1 si preferís manejar el fallo sin cortar el flujo arriba
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Error inesperado al agregar cliente: {ex.Message}");
+                throw;
             }
         }
 

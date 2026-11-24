@@ -25,6 +25,7 @@ namespace AppConsola
                 MostrarMenuPrincipal();
                 string opcion = Console.ReadLine()?.Trim() ?? string.Empty;
 
+                // EJEMPLO DE TRY-CATCH
                 try
                 {
                     switch (opcion)

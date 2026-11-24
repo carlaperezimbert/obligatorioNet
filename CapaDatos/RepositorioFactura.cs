@@ -1,4 +1,5 @@
 using CapaDominio;
+using System.Data.SqlClient;
 
 namespace CapaDatos
 {
