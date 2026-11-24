@@ -8,6 +8,7 @@ namespace CapaDatos
     {
         public int Agregar(Cliente cliente)
         {
+            //EJEMPLO DE TRY/CATCH
             try
             {
                 using (var conn = Conexion.ObtenerConexion())
